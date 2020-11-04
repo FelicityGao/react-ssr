@@ -7,7 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
 // import { matchRoutes } from "react-router-config";
-// import routes from '../src/router/routes';
+// import routes from '../src/router/routes.ts';
 import App from '../src/App.tsx';
 
 
@@ -22,7 +22,6 @@ const app = new Koa();
 const router = new Router();
 // const branch = matchRoutes(routes, path);
 const ROOT_PATH = process.cwd();
-console.log('ROOT_PATH', ROOT_PATH)
 
 // //得到要渲染的组件
 // const Component = branch[0].route.component;
@@ -53,7 +52,6 @@ app.use(
         });
       });
       // 替换掉 {{root}} 为我们生成后的HTML
-      console.log('render',renderToString(<App />));
       ctx.response.body = shtml.replace('{{root}}', renderToString(<App />));
     })
     .routes()

@@ -12,7 +12,6 @@ module.exports = {
       config.module.rules.forEach(d => {
         d.oneOf &&
           d.oneOf.forEach(e => {
-            console.log('e', e)
             if (e && e.options && e.options.name) {
               e.options.name = e.options.name.replace('[hash:8].', '');
             }

@@ -1,0 +1,25 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-config-prettier", "tslint-react"],
+  "jsRules": {
+    "object-literal-sort-keys": false
+  },
+  "rules": {
+    "object-literal-sort-keys": false,
+    "jsx-no-multiline-js": true,
+    "jsx-no-lambda": false,
+    "no-implicit-dependencies": ["optional", ["src"]],
+    "file-name-casing": [
+      true,
+      {
+        "index.tsx$": "camel-case",
+        "index.ts$": "camel-case",
+        "interface.ts$": "camel-case",
+        ".d.ts$": "kebab-case",
+        ".*": "pascal-case"
+      }
+    ],
+    "no-any": true
+  },
+  "rulesDirectory": []
+}

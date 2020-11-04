@@ -4,4 +4,5 @@ require("asset-require-hook")({
 });
 require("babel-core/register")();
 require("babel-polyfill");
+
 require("./app");

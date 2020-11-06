@@ -6,9 +6,9 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
-// import { matchRoutes } from "react-router-config";
-// import routes from '../src/router/routes.ts';
-import App from '../src/App.tsx';
+import { matchRoutes } from "react-router-config";
+import routes from '@/router/routes.ts';
+import App from '@/App.tsx';
 
 
 // 配置文件
@@ -20,11 +20,13 @@ const config = {
 // 实例化 koa
 const app = new Koa();
 const router = new Router();
-// const branch = matchRoutes(routes, path);
+console.log('routes', routes)
+const branch = matchRoutes(routes, path);
 const ROOT_PATH = process.cwd();
 
-// //得到要渲染的组件
+//得到要渲染的组件
 // const Component = branch[0].route.component;
+console.log('branch', branch)
 
 // 静态资源
 app.use(

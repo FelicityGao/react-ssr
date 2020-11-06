@@ -1,0 +1,39 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env"
+  ],
+  "@babel/preset-react",
+  "@babel/preset-typescript"
+],
+"plugins": [
+  ["@babel/plugin-proposal-decorators", { "legacy": true }],
+  ["@babel/plugin-transform-runtime", {
+         "corejs": 2
+       }]
+]
+}
+
+
+
+
+
+// {
+//   "env": {
+//     "node":{
+//       "presets": [
+//         "env"
+//         "react"
+//       ],
+//       "plugins": [
+//         "transform-decorators-legacy",
+//         "transform-runtime",
+//         "dva-hmr"
+//       ]
+//     }
+//   },
+//   "development":{
+//       "presets": ["react-app"]
+//   }
+// }
+

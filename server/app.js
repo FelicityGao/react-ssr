@@ -8,7 +8,6 @@ import path from 'path';
 import { renderToString } from 'react-dom/server';
 import { matchRoutes } from "react-router-config";
 import routes from '@/router/routes.ts';
-import App from '@/App.tsx';
 
 
 // 配置文件
@@ -52,8 +51,10 @@ app.use(
       const branch = matchRoutes(routes, ctx.request.url);
       //得到要渲染的组件
       const Component = branch[0].route.component;
+      // 数据预取
+      const data = Component.getInitialProps(branch[0].match.params)
       // 替换掉 {{root}} 为我们生成后的HTML
-      ctx.response.body = shtml.replace('{{root}}', renderToString(<Component />));
+      ctx.response.body = shtml.replace('{{root}}', renderToString(<Component data={data} />));
     })
     .routes()
 );

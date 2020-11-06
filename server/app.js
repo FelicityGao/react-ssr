@@ -20,13 +20,7 @@ const config = {
 // 实例化 koa
 const app = new Koa();
 const router = new Router();
-console.log('routes', routes)
-const branch = matchRoutes(routes, path);
 const ROOT_PATH = process.cwd();
-
-//得到要渲染的组件
-// const Component = branch[0].route.component;
-console.log('branch', branch)
 
 // 静态资源
 app.use(
@@ -36,6 +30,7 @@ app.use(
     // 这里配置不要写成'index'就可以了，因为在访问localhost:3030时，不能让服务默认去加载index.html文件，这里很容易掉进坑。
   })
 );
+
 
 // 设置路由
 app.use(
@@ -53,18 +48,15 @@ app.use(
           resolve();
         });
       });
+      // 路由同构
+      const branch = matchRoutes(routes, ctx.request.url);
+      //得到要渲染的组件
+      const Component = branch[0].route.component;
       // 替换掉 {{root}} 为我们生成后的HTML
-      ctx.response.body = shtml.replace('{{root}}', renderToString(<App />));
+      ctx.response.body = shtml.replace('{{root}}', renderToString(<Component />));
     })
     .routes()
 );
-// //查找组件
-// const branch = matchRoutes(routes,url);
-// //得到组件
-// const Component = branch[0].route.component;
-// //将组件渲染为 html 字符串
-// const html = renderToString(<Component data={data}/>);
-// res.end(html);
 app.listen(config, function() {
   consola.ready({
     message: `Server listening on http://${config.host}:${config.port}`,

@@ -2,7 +2,7 @@ import App from '@/App';
 import About from '@/views/about/index';
 import Test from '@/views/test/index';
 
-const router = [
+const routes = [
   {
     path: "/",
     exact: true,
@@ -18,4 +18,4 @@ const router = [
   }
 ];
 
-export default router;
+export default routes;

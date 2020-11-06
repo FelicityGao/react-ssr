@@ -6,22 +6,28 @@ import React from 'react';
 import fs from 'fs';
 import path from 'path';
 import { renderToString } from 'react-dom/server';
+const webpackDevMiddleware = require('webpack-dev-middleware');
 // import { matchRoutes } from "react-router-config";
 // import routes from '../src/router/routes.ts';
 import App from '../src/App.tsx';
-
+import webpack from 'webpack';
 
 // 配置文件
 const config = {
   port: 3030,
   host: process.env.HOST || '127.0.0.1'
 };
-
+const webpackConfig = require('../config/webpackServer.config.js');
 // 实例化 koa
 const app = new Koa();
 const router = new Router();
 // const branch = matchRoutes(routes, path);
 const ROOT_PATH = process.cwd();
+
+const compiler = webpack(webpackConfig)
+app.use(webpackDevMiddleware(compiler, {
+  // publicPath: webpackConfig.output.publicPath
+}));
 
 // //得到要渲染的组件
 // const Component = branch[0].route.component;

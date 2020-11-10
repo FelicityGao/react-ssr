@@ -51,10 +51,15 @@ app.use(
       const branch = matchRoutes(routes, ctx.request.url);
       //得到要渲染的组件
       const Component = branch[0].route.component;
+      console.log('branch', branch)
       // 数据预取
       const data = Component.getInitialProps(branch[0].match.params)
-      // 替换掉 {{root}} 为我们生成后的HTML
+      // 数据注入
+      const propsData = `<script> window.__KOASSR__ = ${JSON.stringify(data)} </script>`
+
+      // 替换掉 {{root}} 生成HTML
       ctx.response.body = shtml.replace('{{root}}', renderToString(<Component data={data} />));
+      ctx.response.body = ctx.response.body + propsData
     })
     .routes()
 );

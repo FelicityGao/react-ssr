@@ -1,6 +1,6 @@
-import App from '@/App';
-import About from '@/views/about/index';
-import Test from '@/views/test/index';
+import App from '@/App.tsx';
+import About from '@/views/about/index.tsx';
+import Test from '@/views/test/index.tsx';
 
 const routes = [
   {

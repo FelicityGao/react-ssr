@@ -1,9 +1,8 @@
 
 import * as serviceWorker from './serviceWorker';
 import dva from 'dva';
-import './index.css';
+import './index.less';
 import { createBrowserHistory } from 'history'
-
 
 // 1. Initialize
 const app = dva({

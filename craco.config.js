@@ -20,17 +20,17 @@ module.exports = {
       return config;
      }
 },
-// plugins: [
-//   {
-//     plugin: CracoLessPlugin,
-//     options: {
-//       lessLoaderOptions: {
-//         lessOptions: {
-//           modifyVars: { '@primary-color': '#1DA57A' },
-//           javascriptEnabled: true,
-//         },
-//       },
-//     },
-//   },
-// ],
+plugins: [
+  {
+    plugin: CracoLessPlugin,
+    options: {
+      lessLoaderOptions: {
+        lessOptions: {
+          modifyVars: { '@primary-color': '#1DA57A' },
+          javascriptEnabled: true,
+        },
+      },
+    },
+  },
+]
 };

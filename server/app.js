@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import consola from'consola';
+import consola from 'consola';
 import Router from 'koa-router';
 import koaStatic from 'koa-static';
 import React from 'react';
@@ -8,6 +8,8 @@ import path from 'path';
 import { renderToString } from 'react-dom/server';
 import { matchRoutes } from "react-router-config";
 import routes from '@/router/routes.ts';
+import cnf from '../share/config.js'
+import { insertString } from '@/utils/utils.ts'
 
 
 // 配置文件
@@ -25,7 +27,7 @@ const ROOT_PATH = process.cwd();
 app.use(
   koaStatic(path.join(__dirname, '../build'), {
     maxage: 365 * 24 * 60 * 1000,
-    index: 'root' 
+    index: 'root'
     // 这里配置不要写成'index'就可以了，因为在访问localhost:3030时，不能让服务默认去加载index.html文件，这里很容易掉进坑。
   })
 );
@@ -36,9 +38,12 @@ app.use(
   router
     .get('*', async (ctx, next) => {
       ctx.response.type = 'html'; //指定content type
-      let shtml = '';
+      let shtml = '',
+        fetchResult = {},//属于预取结果
+        metaHtml = '',
+        page = cnf.page || {};
       await new Promise((resolve, reject) => {
-        fs.readFile(path.join(__dirname, '../build/index.html'), 'utf-8', function(err, data) {
+        fs.readFile(path.join(__dirname, '../build/index.html'), 'utf-8', function (err, data) {
           if (err) {
             reject();
             return console.log(err);
@@ -51,19 +56,47 @@ app.use(
       const branch = matchRoutes(routes, ctx.request.url);
       //得到要渲染的组件
       const Component = branch[0].route.component;
-      console.log('branch', branch)
       // 数据预取
-      const data = Component.getInitialProps(branch[0].match.params)
+      let fetchDataFn;
+      fetchDataFn = Component.getInitialProps ? Component.getInitialProps : null;
+      if (fetchDataFn) {
+        fetchResult = await fetchDataFn(branch[0].match.params);
+        if (fetchResult.page) {
+          page = fetchResult.page
+        }
+      }
+      // 循环出meta
+      for (let key in page) {
+        switch (page[key].name) {
+          case 'title':
+            // 替换掉原来的title标签
+            shtml = shtml.replace(/<title>.+<\/title>/g, `<title>${page[key].value}</title>`)
+            break;
+          case 'meta':
+            metaHtml += `<meta name="${key}" content="${page[key].value}"/>`;
+            break;
+          case 'script':
+            metaHtml += `<l src="${page[key].value}"/></l>`;
+            break;
+          case 'link':
+            metaHtml += `<link href="${page[key].value}"/></link>`;
+            break;
+        }
+      }
       // 数据注入
-      const propsData = `<script> window.__KOASSR__ = ${JSON.stringify(data)} </script>`
+      const propsData = `<textarea id="krs-server-render-data-box" style="display:none" > ${JSON.stringify(fetchResult)} </textarea>`
 
       // 替换掉 {{root}} 生成HTML
-      ctx.response.body = shtml.replace('{{root}}', renderToString(<Component data={data} />));
-      ctx.response.body = ctx.response.body + propsData
+      console.log('metaHtml', metaHtml)
+      shtml = insertString(shtml, '</head>', metaHtml)
+      shtml = insertString(shtml, '</body>', propsData)
+      ctx.response.body = shtml.replace('{{root}}', renderToString(<Component data={fetchResult} />));
+      ctx.response.body = ctx.response.body.replace('{{propsData}}', propsData);
+      ctx.response.body = ctx.response.body.replace('{{meta}}', metaHtml)
     })
     .routes()
 );
-app.listen(config, function() {
+app.listen(config, function () {
   consola.ready({
     message: `Server listening on http://${config.host}:${config.port}`,
     badge: true

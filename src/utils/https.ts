@@ -1,5 +1,4 @@
-import fetch from 'dva/fetch';
-console.log('fetch', fetch)
+import { fetch } from 'dva';
 
 function parseJSON(response: any) {
   return response.json();
@@ -22,8 +21,11 @@ function checkStatus(response: any) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url: any, options: any) {
-  return fetch.default(url, options)
+let BASE_URL = 'process.env.REACT_APP_BASE_API'
+export default function request(url: any, options?: any) {
+  url = BASE_URL + url
+  console.log('url', url)
+  return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)
     .then((data: any) => ({ data }))

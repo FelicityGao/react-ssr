@@ -1,18 +1,27 @@
 import React, { Component } from 'react'
 import { Button } from 'antd';
+import RootContext from  '@/client/root-context.tsx'
+import request from '@/utils/https.ts'
 
 
 export default class index extends Component<any> {
-  constructor(props:any){
-    console.log('props',props)
+  constructor(props:any, context:any){
     super(props)
   }
-  static getInitialProps(opt:any){
-    // let a = await fetch(xxxx)
+  static contextType = RootContext;
+  static async getInitialProps(opt:any){
+    let a = await request('/article/show-hot')
     return {
-      title: '关于我们',
-      text: '首先先明确，用node+ts的目的，为什么不ng+ts。这一点后面还会反复提醒自己 node毕竟不是ng'
-    }
+      fetchData: {a},
+      page: {
+        title: {name: 'title',value:'关于我们' },
+        keywords:{name: 'meta', value:'ssr, react, koa'},
+        description:{name: 'meta', value:'我是一段描述'},
+      }
+    };
+  }
+  componentDidMount(){
+    // 客户端渲染时调用
   }
   render() {
     return (

@@ -25,7 +25,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco  build",
+    "dev":"set NODE_ENV=test && craco start",
+    "build": "set NODE_ENV=prod && craco  build",
     "test": "craco  test --env=jsdom",
     "server": "nodemon ./server",
     "eject": "react-scripts eject"

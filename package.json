@@ -25,10 +25,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "dev":"set NODE_ENV=test && craco start",
-    "build": "set NODE_ENV=prod && craco  build",
+    "build": "craco  build",
     "test": "craco  test --env=jsdom",
-    "server": "nodemon ./server",
+    "server": "cross-env NODE_ENV=dev nodemon ./server",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

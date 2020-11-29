@@ -6,5 +6,7 @@ require("babel-core/register")();
 require("babel-polyfill");
 require('module-alias/register')
 
+require("./middleware/readEnv");
+require("./constant");
 require("./app");
 

@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
 import { Button } from 'antd';
-import RootContext from  '@/client/root-context.tsx'
+// import RootContext from  '@/client/root-context.tsx'
 import request from '@/utils/https.ts'
+import pageContainer from '@/client/page-container'
 
 
-export default class index extends Component<any> {
+class index extends Component<any> {
   constructor(props:any, context:any){
     super(props)
   }
-  static contextType = RootContext;
+  // static contextType = RootContext;
   static async getInitialProps(opt:any){
-    let a = await request('/article/show-hot')
+    let a:any = await request('/article/show-hot')
     return {
-      fetchData: {a},
+      fetchData: {...a.data.data},
       page: {
         title: {name: 'title',value:'关于我们' },
         keywords:{name: 'meta', value:'ssr, react, koa'},
@@ -24,12 +25,15 @@ export default class index extends Component<any> {
     // 客户端渲染时调用
   }
   render() {
+    const { fetchData } = this.props.initialData||{};
     return (
       <div>
-        <h3>清清浅浅1111</h3>
-        <p>的点点滴滴</p>
-        <Button type="primary">wwwww</Button>
+        {fetchData && fetchData.data.map((item:any)=>
+          <p key={item.id}>{item.article_type_name}</p>
+        )}
+        <Button type="primary">按钮</Button>
       </div>
     )
   }
 }
+export default pageContainer(index)

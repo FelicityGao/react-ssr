@@ -10,14 +10,14 @@ import { matchRoutes } from "react-router-config";
 import routes from '@/router/routes.ts';
 import cnf from '../share/config.js'
 import { insertString } from '@/utils/utils.ts'
+import proConfig from '../share/config'
 
 
 // 配置文件
 const config = {
-  port: 3030,
+  port: 3000,
   host: process.env.HOST || '127.0.0.1'
 };
-
 // 实例化 koa
 const app = new Koa();
 const router = new Router();
@@ -85,11 +85,12 @@ app.use(
       }
       // 数据注入
       const propsData = `<textarea id="krs-server-render-data-box" style="display:none" > ${JSON.stringify(fetchResult)} </textarea>`
+      const windowVar = `<script>window.__IS__SSR__=${proConfig.__IS_SSR__};</script>`
 
       // 替换掉 {{root}} 生成HTML
-      console.log('metaHtml', metaHtml)
       shtml = insertString(shtml, '</head>', metaHtml)
       shtml = insertString(shtml, '</body>', propsData)
+      shtml = insertString(shtml, '</html>', windowVar)
       ctx.response.body = shtml.replace('{{root}}', renderToString(<Component data={fetchResult} />));
       ctx.response.body = ctx.response.body.replace('{{propsData}}', propsData);
       ctx.response.body = ctx.response.body.replace('{{meta}}', metaHtml)
